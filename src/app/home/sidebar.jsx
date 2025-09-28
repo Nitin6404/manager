@@ -1,8 +1,6 @@
 "use client";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 import { Home, UserPlus } from "lucide-react"; // icons
 
 function cn(...classes) {
@@ -42,7 +40,7 @@ export default function Sidebar() {
           )}
         >
           <UserPlus
-            className="w-6 h-6 text-white"
+            className="w-4 h-4 text-white"
             strokeWidth={2}
             absoluteStrokeWidth
           />
@@ -58,7 +56,7 @@ function HomeBadge() {
     <div className="w-10 h-10 rounded-2xl p-[2px] bg-gradient-to-br from-pink-400 via-purple-500 to-amber-400">
       <div className="w-full h-full rounded-[14px] bg-white flex items-center justify-center">
         <Home
-          className="w-6 h-6 text-black"
+          className="w-4 h-4 text-black"
           strokeWidth={2}
           absoluteStrokeWidth
         />
