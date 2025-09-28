@@ -57,7 +57,7 @@ const taskColumns = [
   {
     accessorKey: "assignedTo",
     header: "Assigned To",
-    cell: (info) => info.getValue() || "-",
+    cell: (info) => info.getValue()?.fullName || "-",
   },
 ];
 
@@ -102,7 +102,6 @@ export default function Dashboard() {
   const [taskSaving, setTaskSaving] = useState(false);
   const [taskSaveError, setTaskSaveError] = useState(null);
 
-  // Reset forms
   const resetCompanyForm = useCallback(() => {
     setName("");
     setDescription("");
@@ -172,14 +171,12 @@ export default function Dashboard() {
     }
   }, [name, description, resetCompanyForm, fetchCompanies]);
 
-  // Project member input handlers
   const handleAddMemberInput = () => setMembers((prev) => [...prev, ""]);
   const handleRemoveMemberInput = (index) =>
     setMembers((prev) => prev.filter((_, i) => i !== index));
   const handleChangeMember = (value, index) =>
     setMembers((prev) => prev.map((m, i) => (i === index ? value : m)));
 
-  // Save project
   const handleSaveProject = async () => {
     if (!projectName.trim()) {
       console.warn("Project name is required");
@@ -211,7 +208,6 @@ export default function Dashboard() {
     }
   };
 
-  // Accordion and fetch projects
   const handleAccordionClick = async (companyId) => {
     const isExpanded = expandedCompanyId === companyId;
     setExpandedCompanyId(isExpanded ? null : companyId);
@@ -237,7 +233,6 @@ export default function Dashboard() {
     }
   };
 
-  // Load tasks for project
   const loadTasks = async (projectId) => {
     if (!projectId) return;
     setTasksLoading(true);
@@ -261,7 +256,6 @@ export default function Dashboard() {
     setTaskDialogOpen(true);
   };
 
-  // Save task
   const handleSaveTask = async () => {
     if (!taskTitle.trim()) {
       console.warn("Task title is required");
@@ -289,8 +283,6 @@ export default function Dashboard() {
       setTaskSaving(false);
     }
   };
-
-  // Setup table instance for tasks
   const table = useReactTable({
     data: tasks || [],
     columns: taskColumns,
@@ -299,7 +291,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-white text-black flex">
-      {/* Sidebar with companies and projects */}
       <div className="md:w-[206px] relative">
         <header className="sticky top-0 bg-white">
           <div className="h-12 flex items-center gap-9 px-3">
@@ -429,7 +420,7 @@ export default function Dashboard() {
                     </div>
                   </div>
                   {expandedCompanyId === c.id && (
-                    <div className="pl-8 pr-2 pt-2 pb-2 bg-neutral-50 border-l border-neutral-200 rounded-b">
+                    <div className="flex items-center justify-between  bg-neutral-50 border border-neutral-200 px-3 py-2 cursor-pointer">
                       {projectsLoading[c.id] ? (
                         <p className="text-xs text-neutral-400">
                           Loading projects...
@@ -455,9 +446,7 @@ export default function Dashboard() {
                                   loadTasks(proj.id || proj._id || "")
                                 }
                               >
-                                <div className="font-semibold">
-                                  {proj.projectName}
-                                </div>
+                                {proj.projectName}
                               </div>
                               <Button
                                 variant="ghost"
@@ -483,8 +472,6 @@ export default function Dashboard() {
         </div>
       </div>
       <div className="w-[1px] bg-gray-200" />
-
-      {/* Main panel shows tasks for selected project */}
       <main className="flex-1 min-h-[calc(100vh-1px)] bg-white text-black p-4 overflow-auto">
         {selectedProjectId ? (
           <>
@@ -544,7 +531,6 @@ export default function Dashboard() {
         )}
       </main>
 
-      {/* Project Creation Dialog */}
       <Dialog open={projectDialogOpen} onOpenChange={setProjectDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -552,10 +538,6 @@ export default function Dashboard() {
             <DialogDescription>
               Fill out project details and assign company and members.
               <br />
-              <span className="text-xs text-neutral-500">
-                Note: Member <code>{HARDCODED_MEMBER_ID}</code> will be added
-                automatically.
-              </span>
             </DialogDescription>
           </DialogHeader>
 
